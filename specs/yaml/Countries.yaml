@@ -1,70 +1,49 @@
+meta:
+  title: Contour Plot
+  description: >
+    Visualizations showing the density of data points in a scatter plot of country indicators.
+    Setting the `fill` color to `"species"` subdivides the data into different sets of densities.
 data:
   country_data: { file: data/Countries.parquet }
 params:
-  brush: { select: crossfilter }
+  bandwidth: 40
+  thresholds: 10
 vconcat:
-  - plot:
-      - mark: rectY
-        data: { from: country_data, filterBy: $brush }
-        x: { bin: GDP }
-        y: { count: "" }
-        fill: steelblue
-        inset: 0.5
-      - select: intervalX
-        as: $brush
-      xDomain: Fixed
-      yTickFormat: s
-      width: 600
-      height: 200
-  - plot:
-      - mark: rectY
-        data: { from: country_data, filterBy: $brush }
-        x: { bin: Unemployment }
-        y: { count: "" }
-        fill: steelblue
-        inset: 0.5
-      - select: intervalX
-        as: $brush
-      xDomain: Fixed
-      yTickFormat: s
-      width: 600
-      height: 200
-  - plot:
-      - mark: rectY
-        data: { from: country_data, filterBy: $brush }
-        x: { bin: Education Expenditure (% GDP) }
-        y: { count: "" }
-        fill: steelblue
-        inset: 0.5
-      - select: intervalX
-        as: $brush
-      xDomain: Fixed
-      yTickFormat: s
-      width: 600
-      height: 200
-  - plot:
-      - mark: rectY
-        data: { from: country_data, filterBy: $brush }
-        x: { bin: Health Expenditure (% GDP) }
-        y: { count: "" }
-        fill: steelblue
-        inset: 0.5
-      - select: intervalX
-        as: $brush
-      xDomain: Fixed
-      yTickFormat: s
-      width: 600
-      height: 200
-  - plot:
-      - mark: rectY
-        data: { from: country_data, filterBy: $brush }
-        x: { bin: Population }
-        y: { count: "" }
-        fill: steelblue
-        inset: 0.5
-      - select: intervalX
-        as: $brush
-      xDomain: Fixed
-      yTickFormat: s
-      width: 600
-      height: 200
+- hconcat:
+  - input: slider
+    label: Bandwidth (σ)
+    as: $bandwidth
+    min: 1
+    max: 100
+  - input: slider
+    label: Thresholds
+    as: $thresholds
+    min: 2
+    max: 20
+- plot:
+  - mark: heatmap
+    data: { from: country_data }
+    x: GDP
+    y: Unemployment
+    fill: Education Expenditure (% GDP)
+    bandwidth: $bandwidth
+  - mark: contour
+    data: { from: country_data }
+    x: GDP
+    y: Unemployment
+    stroke: Health Expenditure (% GDP)
+    bandwidth: $bandwidth
+    thresholds: $thresholds
+  - mark: dot
+    data: { from: country_data }
+    x: GDP
+    y: Unemployment
+    fill: Population
+    r: 1
+  xAxis: bottom
+  xLabelAnchor: center
+  yAxis: right
+  yLabelAnchor: center
+  margins: { top: 5, bottom: 30, left: 5, right: 50 }
+  width: 700
+  height: 480
