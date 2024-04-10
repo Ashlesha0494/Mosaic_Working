@@ -1,0 +1,75 @@
+meta:
+  title: Country Data Analysis
+  description: >
+    Visualizations showing various economic and demographic indicators for different countries.
+    Select a region on the plots to cross-filter the charts.
+data:
+  country_data: { file:  data/Countries.parquet }
+params:
+  brush: { select: crossfilter }
+vconcat:
+- plot:
+  - mark: rectY
+    data: { from: country_data, filterBy: $brush }
+    x: { bin: "GDP" }
+    y: { count: }
+    fill: steelblue
+    inset: 0.5
+  - select: intervalX
+    as: $brush
+  xDomain: Fixed
+  yTickFormat: s
+  width: 600
+  height: 200
+- plot:
+  - mark: rectY
+    data: { from: country_data, filterBy: $brush }
+    x: { bin: "Unemployment" }
+    y: { count: }
+    fill: steelblue
+    inset: 0.5
+  - select: intervalX
+    as: $brush
+  xDomain: Fixed
+  yTickFormat: s
+  width: 600
+  height: 200
+- plot:
+  - mark: rectY
+    data: { from: country_data, filterBy: $brush }
+    x: { bin: "Education Expenditure (% GDP)" }
+    y: { count: }
+    fill: steelblue
+    inset: 0.5
+  - select: intervalX
+    as: $brush
+  xDomain: Fixed
+  yTickFormat: s
+  width: 600
+  height: 200
+- plot:
+  - mark: rectY
+    data: { from: country_data, filterBy: $brush }
+    x: { bin: "Health Expenditure (% GDP)" }
+    y: { count: }
+    fill: steelblue
+    inset: 0.5
+  - select: intervalX
+    as: $brush
+  xDomain: Fixed
+  yTickFormat: s
+  width: 600
+  height: 200
+- plot:
+  - mark: rectY
+    data: { from: country_data, filterBy: $brush }
+    x: { bin: "Population" }
+    y: { count: }
+    fill: steelblue
+    inset: 0.5
+  - select: intervalX
+    as: $brush
+  xDomain: Fixed
+  yTickFormat: s
+  width: 600
+  height: 200
