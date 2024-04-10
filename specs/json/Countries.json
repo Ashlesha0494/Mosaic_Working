@@ -1,0 +1,56 @@
+{
+  "meta": {
+    "title": "Country Data Analysis",
+    "description": "Visualizations showing various economic and demographic indicators for different countries. Select a region on the plots to cross-filter the charts."
+  },
+  "data": {
+    "country_data": {
+      "type": "parquet",
+      "file": "data/Countries.csv"
+    }
+  },
+  "params": {
+    "bandwidth": 0,
+    "thresholds": 0
+  },
+  "vconcat": [
+    {
+      "hconcat": [
+        {
+          "input": "slider",
+          "label": "Bandwidth",
+          "as": "$bandwidth",
+          "min": 1,
+          "max": 100
+        },
+        {
+          "input": "slider",
+          "label": "Thresholds",
+          "as": "$thresholds",
+          "min": 2,
+          "max": 20
+        }
+      ]
+    },
+    {
+      "plot": [
+        {
+          "mark": "rectY",
+          "data": { "from": "country_data", "filterBy": "$brush" },
+          "x": { "bin": "GDP" },
+          "y": { "count": "" },
+          "fill": "steelblue",
+          "inset": 0.5
+        },
+        {
+          "select": "intervalX",
+          "as": "$brush"
+        },
+        { "xDomain": "Fixed" },
+        { "yTickFormat": "s" },
+        { "width": 600 },
+        { "height": 200 }
+      ]
+    }
+  ]
+}
