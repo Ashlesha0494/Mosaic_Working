@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "esbuild": "^0.20.2",
-    "eslint": "^8.57.0",
+    "eslint": "^9.0.0",
     "eslint-plugin-jsdoc": "^48.2.1",
     "lerna": "^8.1.2",
     "mocha": "^10.4.0",
