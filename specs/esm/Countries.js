@@ -1,23 +1,8 @@
 import * as vg from "@uwdata/vgplot";
 
 await vg.coordinator().exec([
-  `CREATE TEMP TABLE IF NOT EXISTS gaia AS -- compute u and v with natural earth projection
-WITH prep AS (
-  SELECT
-    radians((-l + 540) % 360 - 180) AS lambda,
-    radians(b) AS phi,
-    asin(sqrt(3)/2 * sin(phi)) AS t,
-    t^2 AS t2,
-    t2^3 AS t6,
-    *
-  FROM 'https://uwdata.github.io/mosaic-datasets/data/gaia-5m.parquet'
-)
-SELECT
-  (1.340264 * lambda * cos(t)) / (sqrt(3)/2 * (1.340264 + (-0.081106 * 3 * t2) + (t6 * (0.000893 * 7 + 0.003796 * 9 * t2)))) AS u,
-  t * (1.340264 + (-0.081106 * t2) + (t6 * (0.000893 + 0.003796 * t2))) AS v,
-  * EXCLUDE('t', 't2', 't6')
-FROM prep
-WHERE parallax BETWEEN -5 AND 20`
+  `CREATE TEMP TABLE IF NOT EXISTS country_data AS
+   SELECT * FROM 'https://github.com/Ashlesha0494/Mosaic_Working/blob/7bbe23fcc2c8132083b92a5ef57f86513214879a/data/Countries.parquet'`
 ]);
 
 const $brush = vg.Selection.crossfilter();
@@ -29,11 +14,11 @@ export default vg.hconcat(
   vg.vconcat(
     vg.plot(
       vg.raster(
-        vg.from("gaia", {filterBy: $brush}),
+        vg.from("country_data", {filterBy: $brush}),
         {
-          x: "u",
-          y: "v",
-          fill: "density",
+          x: "GDP",
+          y: "Unemployment",
+          fill: "Population",
           bandwidth: $bandwidth,
           pixelSize: $pixelSize
         }
@@ -51,9 +36,9 @@ export default vg.hconcat(
     vg.hconcat(
       vg.plot(
         vg.rectY(
-          vg.from("gaia", {filterBy: $brush}),
+          vg.from("country_data", {filterBy: $brush}),
           {
-            x: vg.bin("phot_g_mean_mag"),
+            x: vg.bin("Education Expenditure (% GDP)"),
             y: vg.count(),
             fill: "steelblue",
             inset: 0.5
@@ -69,8 +54,8 @@ export default vg.hconcat(
       ),
       vg.plot(
         vg.rectY(
-          vg.from("gaia", {filterBy: $brush}),
-          {x: vg.bin("parallax"), y: vg.count(), fill: "steelblue", inset: 0.5}
+          vg.from("country_data", {filterBy: $brush}),
+          {x: vg.bin("Health Expenditure (% GDP)"), y: vg.count(), fill: "steelblue", inset: 0.5}
         ),
         vg.intervalX({as: $brush}),
         vg.xDomain(vg.Fixed),
@@ -85,11 +70,11 @@ export default vg.hconcat(
   vg.hspace(10),
   vg.plot(
     vg.raster(
-      vg.from("gaia", {filterBy: $brush}),
+      vg.from("country_data", {filterBy: $brush}),
       {
-        x: "bp_rp",
-        y: "phot_g_mean_mag",
-        fill: "density",
+        x: "GDP Per Capita",
+        y: "Population Density",
+        fill: "Net Trade",
         bandwidth: $bandwidth,
         pixelSize: $pixelSize
       }

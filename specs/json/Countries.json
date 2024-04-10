@@ -6,12 +6,12 @@
   "data": {
     "country_data": {
       "type": "parquet",
-      "file": "data/Countries.csv"
+      "file": "data/Countries.parquet"
     }
   },
   "params": {
-    "bandwidth": 0,
-    "thresholds": 0
+    "bandwidth": 40,
+    "thresholds": 10
   },
   "vconcat": [
     {
